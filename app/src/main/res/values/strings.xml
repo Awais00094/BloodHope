@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">BloodHope</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="google_maps_key">AIzaSyDPEsNVlfm_UXyRN41t-xVQ1CxfdNAkucA</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="option_get_place">get current place</string>
+    <string name="default_info_title">default_title</string>
+    <string name="default_info_snippet">defalut_snippet</string>
+    <string name="pick_place">Pick Place</string>
+
+    <string-array name="logo_paths">
+        <item>M230.7,398.7c-14.8,-12.7 -22.9,-31.9 -25.1,-51.2c-2.2,-19.3 1.1,-38.9 6.2,-57.7c9.6,-35.5 26,-69.6 50.4,-97.1c28.5,40 50.9,87.1 48.8,136.1c-0.8,18.7 -5.3,37.4 -14.7,53.6c-9.4,16.2 -24.1,29.5 -41.8,35.7c-17.6,6.2 -37.5,4.9 -54.4,-2.9c-16.9,-7.8 -30.7,-21.9 -38.7,-38.6c-14.3,-29.8 -10.1,-65.1 -1,-96.9c17.8,-62.8 53.6,-120.3 101.9,-164.1c28.1,28.9 52.8,61.3 70.7,97.4s28.9,75.9 29.5,116.1c0.3,22.8 -2.8,45.9 -11,67.1c-16.3,41.9 -55.3,74.1 -100,81.1c-40.6,6.3 -81.1,-10.8 -109.3,-39.8c-18.2,-18.8 -31.5,-42.5 -37.3,-68.1c-9.9,-44.1 1.4,-90.2 17.2,-131.5c17.1,-45 41.6,-86.9 71.6,-124.5c20.4,-25.5 43.2,-49 68.1,-70.2c3.8,-3.2 46.1,44.6 49.7,48.9c51.5,60.8 94.3,142.2 102.8,222.9c4.5,42.6 -0.5,87.5 -22.8,124.9c0,0 -36.1,61 -77.7,72.1c27.7,-7.4 53.6,-15.9 75.5,-35.7c46.7,-42.5 57.9,-104.2 52.6,-164.2c-8.5,-95.3 -58.3,-179.8 -119.4,-251.2c-5.6,-6.6 -56.2,-64.4 -60.6,-60.8C223.3,31.4 191,69.3 162,109.4c-63.5,87.9 -124.9,221.6 -59.5,326.5c9.8,15.7 22.4,29.5 37,40.8c30.4,23.6 69.8,33.5 107.9,29.4c42.4,-4.5 84.8,-28.5 109.8,-63.3c25.3,-35.2 34.2,-79.1 32,-121.9c-2,-40.1 -13,-79.7 -29.7,-116.1c-2.6,-5.7 -5.4,-11.3 -8.3,-16.9c-15.9,-30.3 -35.4,-58.7 -57.8,-84.5c-2.4,-2.8 -29.5,-32.4 -30.9,-31.2c0,0 -76.3,70 -108.2,145c0,0 -40.1,84.8 -20.8,157.4c0,0 10.1,57.1 77,76.3c0,0 48.5,14.6 90.2,-24.3c38.7,-36.1 41,-89.1 30.4,-137.8c-11,-50.6 -33,-100.5 -67.9,-139.7C218.7,192.8 189.3,251.4 181,313c-2.6,19.3 -3.1,39.7 4.6,57.6C193.2,388.4 212,403.3 230.7,398.7z</item>
+    </string-array>
+    <integer-array name="logo_paths_colors">
+        <item>@color/colorPrimary</item>
+        <!--///////////////////-->
+
+    </integer-array>
+
+</resources>

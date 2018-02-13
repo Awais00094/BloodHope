@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ustech.bloodhope.Activities.SplashActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/splasContainer"
+        android:layout_centerVertical="true">
+        <com.jaredrummler.android.widget.AnimatedSvgView
+            android:id="@+id/splashlogo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="25dp"
+            app:animatedSvgFillColors="@array/logo_paths_colors"
+            app:animatedSvgGlyphStrings="@array/logo_paths"
+            app:animatedSvgFillStart="1500"
+            app:animatedSvgFillTime="2000"
+            app:animatedSvgImageSizeX="600"
+            app:animatedSvgImageSizeY="600"
+            app:animatedSvgTraceTime="2000"
+            app:animatedSvgTraceTimePerGlyph="2000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hope Drops"
+            android:gravity="center"
+            android:layout_below="@+id/splashlogo"
+            android:textSize="40dp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:id="@+id/appLable"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appLable"
+            android:text="BE A HERO - DONATE"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/colorBlack"
+            android:id="@+id/hopeDropSubtitle"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

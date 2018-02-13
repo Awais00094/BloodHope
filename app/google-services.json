@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "364616939649",
+    "firebase_url": "https://hopedrop-1517851711707.firebaseio.com",
+    "project_id": "hopedrop-1517851711707",
+    "storage_bucket": "hopedrop-1517851711707.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364616939649:android:28f4e11b34198d80",
+        "android_client_info": {
+          "package_name": "com.ustech.bloodhope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364616939649-qe4dq8rml4vng0inni1cc5h2f1qqhtdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ustech.bloodhope",
+            "certificate_hash": "33e600956086992a68bba8bc8c92a41fd68a3b28"
+          }
+        },
+        {
+          "client_id": "364616939649-968eo69e2g0gjtrcpraepisd3o3o1ol0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3edY3Iy9WljdsEM8xA4uDyI4dbheWKXk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "364616939649-968eo69e2g0gjtrcpraepisd3o3o1ol0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
