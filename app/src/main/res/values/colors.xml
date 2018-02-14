@@ -8,5 +8,6 @@
     <color name="colorBlack">#000000</color>
     <color name="header">#004D40</color>
     <color name="colorWhite">#fff</color>
+    <color name="colorCurrentIndicator">#1565C0</color>
 
 </resources>

@@ -1,11 +1,17 @@
 package com.ustech.bloodhope.Activities;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.print.PrintAttributes;
+import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,9 +36,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -41,6 +52,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihood;
@@ -60,6 +74,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.jaredrummler.android.widget.AnimatedSvgView;
 import com.ustech.bloodhope.R;
+import com.ustech.bloodhope.Receivers.NetworkReceiver;
+import com.ustech.bloodhope.Services.GPSService;
 import com.ustech.bloodhope.Utils.Constants;
 import com.ustech.bloodhope.Utils.MyApplication;
 
@@ -112,8 +128,29 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //registring the reciever
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        HomeActivity.this.registerReceiver(new NetworkReceiver(),filter);
+        //end receicer
+
         current_location_indicator= (AnimatedSvgView) findViewById(R.id.user_current_logo);
         //settings the maps
+         if( !((MyApplication)getApplication()).isGpsOn())
+         {
+             new MaterialDialog.Builder(this)
+                     .title("Gps is turnd off")
+                     .content("can't reach to your location please turn on location service")
+                     .positiveText("GPS").onPositive(new MaterialDialog.SingleButtonCallback() {
+                             @Override
+                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                 startActivity(intent);
+                             }
+                         })
+                     .negativeText("cancel").cancelable(false)
+                     .show();
+         }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -134,8 +171,31 @@ public class HomeActivity extends AppCompatActivity
             locationRequest.setInterval(15 * 1000);
             locationRequest.setFastestInterval(10 * 1000);
             locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+            builder.setAlwaysShow(true);
 
             Log.d(Constants.TAG,"on create");
+            if( !((MyApplication)getApplication()).isOnline())
+            {
+                //Toast.makeText(this, "no network found", Toast.LENGTH_SHORT).show();
+                new MaterialDialog.Builder(this)
+                        .title("No network found")
+                        .content("can't reach to the hope drop network please check you connectivity")
+                        .positiveText("WiFi").onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                }
+                            })
+                        .negativeText("cancel").cancelable(false)
+                        .show();
+
+            }
+            else
+            {
+                //Toast.makeText(this, "network found", Toast.LENGTH_SHORT).show();
+
+            }
         } catch (Exception e) {
            //e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
@@ -152,6 +212,7 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+         //   stopService(new Intent(HomeActivity.this, GPSService.class));
         }
     }
 
@@ -278,7 +339,10 @@ public class HomeActivity extends AppCompatActivity
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{   Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_WIFI_STATE
+                                    },
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }

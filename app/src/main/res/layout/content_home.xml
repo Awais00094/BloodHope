@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,19 +18,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.ustech.bloodhope.Activities.HomeActivity">
-        <com.jaredrummler.android.widget.AnimatedSvgView
-            android:id="@+id/user_current_logo"
-            android:layout_width="30dp"
-            android:layout_height="50dp"
 
-            app:animatedSvgFillColors="@array/logo_paths_colors"
-            app:animatedSvgFillStart="1500"
-            app:animatedSvgFillTime="2000"
-            app:animatedSvgGlyphStrings="@array/logo_paths"
-            app:animatedSvgImageSizeX="600"
-            app:animatedSvgImageSizeY="600"
-            app:animatedSvgTraceTime="2000"
-            app:animatedSvgTraceTimePerGlyph="2000" />
+            <com.jaredrummler.android.widget.AnimatedSvgView
+                android:id="@+id/user_current_logo"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="3dp"
+                app:animatedSvgFillColors="@array/current_location_indicator_paths_colors"
+                app:animatedSvgFillStart="1500"
+                app:animatedSvgFillTime="2000"
+                app:animatedSvgGlyphStrings="@array/current_location_indicator_paths"
+                app:animatedSvgImageSizeX="600"
+                app:animatedSvgImageSizeY="600"
+                app:animatedSvgTraceTime="2000"
+                app:animatedSvgTraceTimePerGlyph="2000" />
+
     </fragment>
 
 </RelativeLayout>

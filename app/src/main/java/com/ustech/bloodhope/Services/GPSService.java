@@ -95,8 +95,8 @@ public class GPSService extends Service implements LocationListener, GoogleApiCl
         try {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-            mLocationRequest.setFastestInterval(1000);
+            mLocationRequest.setInterval(5000); // Update location every second
+            mLocationRequest.setFastestInterval(2000);
             mLocationRequest.setSmallestDisplacement(1);
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

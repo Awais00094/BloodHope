@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jaredrummler.android.widget.AnimatedSvgView;
 import com.ustech.bloodhope.R;
 import com.ustech.bloodhope.Services.GPSService;
+import com.ustech.bloodhope.Services.OnClearFromRecentService;
 
 public class SplashActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_LENGTH = 3000;
@@ -34,6 +35,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
                 startService(new Intent(SplashActivity.this,GPSService.class));
+                startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
                 Intent mainIntent = new Intent(SplashActivity.this,HomeActivity.class);
                 startActivity(mainIntent);
                 finish();
