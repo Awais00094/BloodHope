@@ -7,14 +7,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -66,6 +69,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -168,8 +173,8 @@ public class HomeActivity extends AppCompatActivity
             }
 
             locationRequest = new LocationRequest();
-            locationRequest.setInterval(15 * 1000);
-            locationRequest.setFastestInterval(10 * 1000);
+            locationRequest.setInterval(25 * 1000);
+            locationRequest.setFastestInterval(15 * 1000);
             locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
             builder.setAlwaysShow(true);
@@ -266,6 +271,7 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -289,10 +295,10 @@ public class HomeActivity extends AppCompatActivity
                         (FrameLayout) findViewById(R.id.map), false);
 
                 TextView title = ((TextView) infoWindow.findViewById(R.id.title));
-                //title.setText(marker.getTitle());
+                title.setText(marker.getTitle());
 
                 TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
-                //snippet.setText(marker.getSnippet());
+                snippet.setText(marker.getSnippet());
 
                 return infoWindow;
             }
@@ -307,10 +313,9 @@ public class HomeActivity extends AppCompatActivity
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        //map.setTrafficEnabled(true);
-        //map.setIndoorEnabled(true);
+        updateLocationUI();
+        mMap.setTrafficEnabled(true);
+        mMap.setIndoorEnabled(true);
         mMap.setBuildingsEnabled(true);
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
@@ -320,11 +325,51 @@ public class HomeActivity extends AppCompatActivity
 
                 myLatitude_Drag = myLatitude_Drag_s;
                 myLongitude_Drag = myLongitude_Drag_s;
+                current_location_indicator.setVisibility(View.VISIBLE);
 
                 current_location_indicator.start();
             }
         });
-        updateLocationUI();
+        final LatLng PERTH = new LatLng(33.667425, 73.150671);
+        final LatLng SYDNEY = new LatLng(33.669845, 73.153879);
+        final LatLng BRISBANE = new LatLng(33.670863, 73.147731);
+
+        Marker mPerth;
+        Marker mSydney;
+        Marker mBrisbane;
+
+//        mPerth = mMap.addMarker(new MarkerOptions()
+//                .position(PERTH)
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_doner_location_indicator))
+//                .snippet("Last donation 23-10-2017")
+//                .title("Ali"));
+//        mPerth.setTag(1);
+
+        mSydney = mMap.addMarker(new MarkerOptions()
+                .position(SYDNEY)
+                .icon(BitmapDescriptorFactory.fromBitmap(Constants.drawableToBitmap(getResources().getDrawable(R.drawable.ic_doner_location_indicator,null)) ) )
+
+                .snippet("Last donation 23-10-2017")
+                .title("Osama"));
+        mSydney.setTag(2);
+//
+//        mBrisbane = mMap.addMarker(new MarkerOptions()
+//                .position(BRISBANE)
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_doner_location_indicator))
+//                .snippet("Last donation 23-10-2017")
+//                .title("Haider"));
+//        mBrisbane.setTag(3);
+
+        // Set a listener for marker click.
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Toast.makeText(HomeActivity.this, "name is "+marker.getTitle(), Toast.LENGTH_SHORT).show();
+                current_location_indicator.setVisibility(View.INVISIBLE);
+                return false;
+            }
+        });
     }
 
     private void getLocationPermission() {
@@ -411,7 +456,7 @@ public class HomeActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         try {
 
-            Log.d(Constants.TAG,"location Changed");
+            Log.d(Constants.TAG,"on location Changed1");
             myLatitude = location.getLatitude();
             myLongitude = location.getLongitude();
             //Store Current Location In MyApplication
