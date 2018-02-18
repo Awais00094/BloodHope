@@ -25,6 +25,7 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
+        startService(new Intent(SplashActivity.this,GPSService.class));
 
         AnimatedSvgView svgView = (AnimatedSvgView) findViewById(R.id.splashlogo);
         svgView.start();
@@ -34,8 +35,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                startService(new Intent(SplashActivity.this,GPSService.class));
-                startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+               // startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
                 Intent mainIntent = new Intent(SplashActivity.this,HomeActivity.class);
                 startActivity(mainIntent);
                 finish();

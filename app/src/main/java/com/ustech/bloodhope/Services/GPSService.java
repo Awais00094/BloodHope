@@ -87,6 +87,7 @@ public class GPSService extends Service implements LocationListener, GoogleApiCl
 
         ((MyApplication) getApplication()).setLat(lat);
         ((MyApplication) getApplication()).setLon(lon);
+        Log.d(Constants.TAG,"gps = "+((MyApplication) getApplication()).getLat());
     }
     /////////////////////Google Play Methods//////////////////////////////////////
 
@@ -95,8 +96,8 @@ public class GPSService extends Service implements LocationListener, GoogleApiCl
         try {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(5000); // Update location every second
-            mLocationRequest.setFastestInterval(2000);
+            mLocationRequest.setInterval(3000); // Update location every second
+            mLocationRequest.setFastestInterval(1500);
             mLocationRequest.setSmallestDisplacement(1);
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

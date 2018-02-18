@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.print.PrintAttributes;
 import android.provider.Settings;
 import android.provider.SyncStateContract;
@@ -33,6 +36,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -76,6 +81,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.jaredrummler.android.widget.AnimatedSvgView;
 import com.ustech.bloodhope.R;
@@ -314,9 +320,9 @@ public class HomeActivity extends AppCompatActivity
             return;
         }
         updateLocationUI();
-        mMap.setTrafficEnabled(true);
-        mMap.setIndoorEnabled(true);
-        mMap.setBuildingsEnabled(true);
+        //mMap.setTrafficEnabled(true);
+        //mMap.setIndoorEnabled(true);
+        //mMap.setBuildingsEnabled(true);
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
@@ -337,35 +343,43 @@ public class HomeActivity extends AppCompatActivity
         Marker mPerth;
         Marker mSydney;
         Marker mBrisbane;
-
-//        mPerth = mMap.addMarker(new MarkerOptions()
-//                .position(PERTH)
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_doner_location_indicator))
-//                .snippet("Last donation 23-10-2017")
-//                .title("Ali"));
-//        mPerth.setTag(1);
-
+        BitmapDescriptor icon;
+        if(android.os.Build.VERSION.SDK_INT >= 21){
+            icon = BitmapDescriptorFactory.fromBitmap(Constants.drawableToBitmap(getResources().getDrawable(R.drawable.ic_doner_location_indicator,getTheme())) );
+        }
+        else
+        {
+            icon=  BitmapDescriptorFactory.fromResource(R.drawable.ic_doner_location_indicator);
+        }
+        mPerth = mMap.addMarker(new MarkerOptions()
+                .position(PERTH)
+                .icon(icon)
+                .snippet("Last donation 23-10-2017")
+                .title("Ali"));
+        mPerth.setTag(1);
         mSydney = mMap.addMarker(new MarkerOptions()
                 .position(SYDNEY)
-                .icon(BitmapDescriptorFactory.fromBitmap(Constants.drawableToBitmap(getResources().getDrawable(R.drawable.ic_doner_location_indicator,null)) ) )
-
+                .icon(icon)
                 .snippet("Last donation 23-10-2017")
                 .title("Osama"));
         mSydney.setTag(2);
-//
-//        mBrisbane = mMap.addMarker(new MarkerOptions()
-//                .position(BRISBANE)
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_doner_location_indicator))
-//                .snippet("Last donation 23-10-2017")
-//                .title("Haider"));
-//        mBrisbane.setTag(3);
+        mBrisbane = mMap.addMarker(new MarkerOptions()
+                .position(BRISBANE)
+                .icon(icon)
+                .snippet("Last donation 23-10-2017")
+                .title("Haider"));
+        mBrisbane.setTag(3);
+        Log.d(Constants.TAG,"map is ready "+ ((MyApplication)getApplication()).getLat());
+
 
         // Set a listener for marker click.
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 Toast.makeText(HomeActivity.this, "name is "+marker.getTitle(), Toast.LENGTH_SHORT).show();
+                //move marker code
+                LatLng newQuard = new LatLng(33.667136, 73.151392);
+                animateMarker(1,marker.getPosition(),newQuard,false,marker);
                 current_location_indicator.setVisibility(View.INVISIBLE);
                 return false;
             }
@@ -406,7 +420,7 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         }
-        updateLocationUI();
+        //updateLocationUI();
     }
 
     private void updateLocationUI() {
@@ -456,9 +470,9 @@ public class HomeActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         try {
 
-            Log.d(Constants.TAG,"on location Changed1");
             myLatitude = location.getLatitude();
             myLongitude = location.getLongitude();
+            Log.d(Constants.TAG,"on location Changed = "+myLatitude);
             //Store Current Location In MyApplication
             ((MyApplication)getApplication()).setLat(String.valueOf(myLatitude));
             ((MyApplication)getApplication()).setLon(String.valueOf(myLongitude));
@@ -532,10 +546,55 @@ public class HomeActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void animateMarker(final int position, final LatLng startPosition, final LatLng toPosition,
+                              final boolean hideMarker,final  Marker marker) {
+
+
+//        final Marker marker = mMap.addMarker(new MarkerOptions()
+//                .position(startPosition)
+//                .icon(BitmapDescriptorFactory.fromBitmap(Constants.drawableToBitmap(getResources().getDrawable(R.drawable.ic_doner_location_indicator,null)) ) )
+//                .snippet("Last donation 23-10-2017")
+//                .title("Haider"));
+
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+
+        final long duration = 15*1000;
+        final Interpolator interpolator = new LinearInterpolator();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                double lng = t * toPosition.longitude + (1 - t)
+                        * startPosition.longitude;
+                double lat = t * toPosition.latitude + (1 - t)
+                        * startPosition.latitude;
+
+                marker.setPosition(new LatLng(lat, lng));
+
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
     }
 
 
